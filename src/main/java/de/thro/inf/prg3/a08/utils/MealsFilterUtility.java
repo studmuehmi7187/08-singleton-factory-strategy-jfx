@@ -28,7 +28,7 @@ public abstract class MealsFilterUtility {
 	public static List<Meal> filterForVegetarian(List<Meal> mealsToFilter) {
 		List<Meal> result = new LinkedList<>();
 		/* iterate all the meals */
-		for (Meal m : mealsToFilter) {
+		for (var m : mealsToFilter) {
 			/* check if meal is vegetarian */
 			if (m.isVegetarian()) {
 				result.add(m);
