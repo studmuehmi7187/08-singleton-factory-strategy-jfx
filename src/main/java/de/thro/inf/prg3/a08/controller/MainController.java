@@ -59,7 +59,7 @@ public class MainController implements Initializable {
 	private ListView<Meal> mealsListView;
 
 	/*
-	  static initializer to initialize static fields in class
+	  static initializer to initialize fields in class
 	 */
 	static {
 		logger = LogManager.getLogger(MainController.class);
@@ -123,6 +123,10 @@ public class MainController implements Initializable {
 			@Override
 			public void onFailure(Call<List<Meal>> call, Throwable t) {
 				logger.error("Failed to fetch meals");
+				var alert = new Alert(Alert.AlertType.ERROR);
+				alert.setHeaderText("Failed HTTP call");
+				alert.setContentText("Failed to submit HTTP call to fetch meals.");
+				alert.show();
 			}
 		});
 	}
