@@ -2,10 +2,13 @@ package de.thro.inf.prg3.a08.controller;
 
 import com.google.gson.Gson;
 import de.thro.inf.prg3.a08.api.OpenMensaAPI;
+import de.thro.inf.prg3.a08.filtering.MealFilterFactory;
+import de.thro.inf.prg3.a08.filtering.MealsFilter;
 import de.thro.inf.prg3.a08.model.Meal;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -94,20 +97,26 @@ public class MainController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		mealsListView.setItems(meals);
 		filterChoiceBox.setItems(FXCollections.observableList(Arrays.asList(gson.fromJson(new InputStreamReader(getClass().getResourceAsStream("/filters.json")), String[].class))));
-		doGetMails();
+		filterChoiceBox.getSelectionModel().selectFirst();
 	}
 
 	/**
 	 * Handles fetching of meals from OpenMensa API
 	 */
 	private void doGetMails() {
+		var currentFilterName = filterChoiceBox.getSelectionModel().getSelectedItem();
+		logger.debug(String.format("Selected filter is: %s", currentFilterName));
+		var filter = MealFilterFactory.getStrategy(currentFilterName);
+
 		api.getMeals(openMensaDateFormat.format(new Date())).enqueue(new Callback<>() {
 			@Override
 			public void onResponse(Call<List<Meal>> call, Response<List<Meal>> response) {
 				logger.debug("Got response");
 				if (!response.isSuccessful() || response.body() == null) {
 					logger.error(String.format("Got response with not successfull code %d", response.code()));
+
 					Platform.runLater(() -> {
+						/* Show an error message if the HTTP status code is not 2xx */
 						var alert = new Alert(Alert.AlertType.ERROR);
 						alert.setHeaderText("Unsuccessful HTTP call");
 						alert.setContentText("Failed to get meals from OpenMensaAPI");
@@ -115,9 +124,11 @@ public class MainController implements Initializable {
 					});
 					return;
 				}
-
-				meals.clear();
-				meals.addAll(response.body());
+				Platform.runLater(() -> {
+					/* filter meals according to the selected filter */
+					meals.clear();
+					meals.addAll(filter.filter(response.body()));
+				});
 			}
 
 			@Override
@@ -129,5 +140,21 @@ public class MainController implements Initializable {
 				alert.show();
 			}
 		});
+	}
+
+	/**
+	 * Handle changed value in ChoiceBox to switch filter
+	 */
+	@FXML
+	private void onFilterChange() {
+		doGetMails();
+	}
+
+	/**
+	 * Handle refresh button click
+	 */
+	@FXML
+	private void onRefresh() {
+		doGetMails();
 	}
 }

@@ -13,6 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -25,6 +26,14 @@ class OpenMensaAPITests {
 	private static final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
 	private OpenMensaAPI api;
+
+	private static Date getUpcomingMondayDate() {
+		Calendar cal = Calendar.getInstance();
+		while (cal.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
+			cal.add(Calendar.DAY_OF_MONTH, 1);
+		}
+		return cal.getTime();
+	}
 
 	@BeforeEach
 	void setUp() {
@@ -40,7 +49,7 @@ class OpenMensaAPITests {
 
 		var retrofit = new Retrofit.Builder()
 			.addConverterFactory(GsonConverterFactory.create())
-			.baseUrl("http://openmensa.org/api/v2/")
+			.baseUrl("https://openmensa.org/api/v2/")
 			.client(client)
 			.build();
 
@@ -51,7 +60,7 @@ class OpenMensaAPITests {
 	@Test
 	void testGetMeals() throws IOException {
 		/* create a call to get all meals of the current day */
-		var mealsCall = api.getMeals(dateFormat.format(new Date()));
+		var mealsCall = api.getMeals(dateFormat.format(getUpcomingMondayDate()));
 
 		/* execute the call synchronous */
 		var mealsResponse = mealsCall.execute();
