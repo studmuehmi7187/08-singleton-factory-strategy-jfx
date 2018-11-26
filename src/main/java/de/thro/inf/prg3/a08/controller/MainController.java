@@ -134,10 +134,12 @@ public class MainController implements Initializable {
 			@Override
 			public void onFailure(Call<List<Meal>> call, Throwable t) {
 				logger.error("Failed to fetch meals");
-				var alert = new Alert(Alert.AlertType.ERROR);
-				alert.setHeaderText("Failed HTTP call");
-				alert.setContentText("Failed to submit HTTP call to fetch meals.");
-				alert.show();
+				Platform.runLater(() -> {
+					var alert = new Alert(Alert.AlertType.ERROR);
+					alert.setHeaderText("Failed HTTP call");
+					alert.setContentText("Failed to submit HTTP call to fetch meals.");
+					alert.show();
+				});
 			}
 		});
 	}
