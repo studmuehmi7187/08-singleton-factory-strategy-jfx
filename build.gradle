@@ -1,8 +1,8 @@
 plugins {
     id 'java'
     id 'application'
-    id 'idea'
     id "com.google.osdetector" version "1.4.0"
+	id 'org.openjfx.javafxplugin' version '0.0.5'
 }
 
 group 'de.thro.inf.prg3'
@@ -35,10 +35,7 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:${retrofit2_version}"
     implementation "com.squareup.retrofit2:converter-gson:${retrofit2_version}"
 
-    implementation "org.openjfx:javafx-base:11.0.1:$platform"
     implementation "org.openjfx:javafx-graphics:11.0.1:$platform"
-    implementation "org.openjfx:javafx-controls:11.0.1:$platform"
-    implementation "org.openjfx:javafx-fxml:11:$platform"
 
     testCompile("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
@@ -52,22 +49,6 @@ test {
     }
 }
 
-compileJava {
-    doFirst {
-        options.compilerArgs = [
-                '--module-path', classpath.asPath,
-                '--add-modules', 'javafx.controls',
-                '--add-modules', 'javafx.fxml'
-        ]
-    }
-}
-
-run {
-    doFirst {
-        jvmArgs = [
-                '--module-path', classpath.asPath,
-                '--add-modules', 'javafx.controls',
-                '--add-modules', 'javafx.fxml'
-        ]
-    }
+javafx {
+	modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
