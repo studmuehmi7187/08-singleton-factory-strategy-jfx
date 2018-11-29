@@ -1,14 +1,12 @@
 package de.thro.inf.prg3.a08.controller;
 
 import com.google.gson.Gson;
-import de.thro.inf.prg3.a08.api.OpenMensaAPI;
 import de.thro.inf.prg3.a08.filtering.MealFilterFactory;
-import de.thro.inf.prg3.a08.filtering.MealsFilter;
 import de.thro.inf.prg3.a08.model.Meal;
+import de.thro.inf.prg3.a08.service.OpenMensaAPIService;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -19,8 +17,6 @@ import org.apache.logging.log4j.Logger;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -45,9 +41,7 @@ public class MainController implements Initializable {
 	 */
 	private static final DateFormat openMensaDateFormat;
 
-	private final OpenMensaAPI api;
 	private final ObservableList<Meal> meals;
-	private final Gson gson;
 
 	/**
 	 * Binding of ChoiceBox UI element to filter for certain types of meals
@@ -74,16 +68,6 @@ public class MainController implements Initializable {
 	 */
 	public MainController() {
 		meals = FXCollections.observableArrayList();
-		gson = new Gson();
-
-		/* initialize Retrofit instance */
-		var retrofit = new Retrofit.Builder()
-			.addConverterFactory(GsonConverterFactory.create(gson))
-			.baseUrl("http://openmensa.org/api/v2/")
-			.build();
-
-		/* create OpenMensaAPI instance */
-		api = retrofit.create(OpenMensaAPI.class);
 	}
 
 	/**
@@ -96,7 +80,7 @@ public class MainController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		mealsListView.setItems(meals);
-		filterChoiceBox.setItems(FXCollections.observableList(Arrays.asList(gson.fromJson(new InputStreamReader(getClass().getResourceAsStream("/filters.json")), String[].class))));
+		filterChoiceBox.setItems(FXCollections.observableList(Arrays.asList(new Gson().fromJson(new InputStreamReader(getClass().getResourceAsStream("/filters.json")), String[].class))));
 		filterChoiceBox.getSelectionModel().selectFirst();
 	}
 
@@ -107,7 +91,9 @@ public class MainController implements Initializable {
 		var currentFilterName = filterChoiceBox.getSelectionModel().getSelectedItem();
 		logger.debug(String.format("Selected filter is: %s", currentFilterName));
 		var filter = MealFilterFactory.getStrategy(currentFilterName);
-		api.getMeals(openMensaDateFormat.format(new Date())).enqueue(new Callback<>() {
+
+		/* get API instance from service singleton to execute call */
+		OpenMensaAPIService.getInstance().getApi().getMeals(openMensaDateFormat.format(new Date())).enqueue(new Callback<>() {
 			@Override
 			public void onResponse(Call<List<Meal>> call, Response<List<Meal>> response) {
 				logger.debug("Got response");
