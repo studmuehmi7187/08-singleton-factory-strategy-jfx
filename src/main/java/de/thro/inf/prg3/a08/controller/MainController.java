@@ -103,11 +103,10 @@ public class MainController implements Initializable {
 	/**
 	 * Handles fetching of meals from OpenMensa API
 	 */
-	private void doGetMails() {
+	private void doGetMeals() {
 		var currentFilterName = filterChoiceBox.getSelectionModel().getSelectedItem();
 		logger.debug(String.format("Selected filter is: %s", currentFilterName));
 		var filter = MealFilterFactory.getStrategy(currentFilterName);
-
 		api.getMeals(openMensaDateFormat.format(new Date())).enqueue(new Callback<>() {
 			@Override
 			public void onResponse(Call<List<Meal>> call, Response<List<Meal>> response) {
@@ -149,7 +148,7 @@ public class MainController implements Initializable {
 	 */
 	@FXML
 	private void onFilterChange() {
-		doGetMails();
+		doGetMeals();
 	}
 
 	/**
@@ -157,6 +156,6 @@ public class MainController implements Initializable {
 	 */
 	@FXML
 	private void onRefresh() {
-		doGetMails();
+		doGetMeals();
 	}
 }
