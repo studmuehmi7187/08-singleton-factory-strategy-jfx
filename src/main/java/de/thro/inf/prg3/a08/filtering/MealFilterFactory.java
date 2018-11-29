@@ -36,7 +36,37 @@ public abstract class MealFilterFactory {
 	 * @param key key to resolve strategy
 	 * @return MealsFilter instance corresponding to the given key or AllMealsStrategy as fallback
 	 */
-	public static MealsFilter getStrategy(String key){
+	public static MealsFilter getStrategy(String key) {
 		return filters.getOrDefault(key, filters.get("All"));
 	}
+
+	/**
+	 * Get the matching strategy to the given keyword
+	 * if strategy is unknown the factory will fallback to the AllMealsStrategy
+	 * Method does not cache strategy instances but creates a new instance per call
+	 *
+	 * @param key key to resolve strategy
+	 * @return MealsFilter instance corresponding to the given key or AllMealsStrategy as fallback
+	 */
+	public static MealsFilter getStrategyThroughSwitch(String key) {
+		switch (key) {
+			case "Vegetarian":
+				return new VegetarianStrategy();
+			case "No soy":
+				return new NoSoyStrategy();
+			case "No pork":
+				return new NoPorkStrategy();
+			default:
+				return new AllMealsStrategy();
+		}
+	}
 }
+
+
+
+
+
+
+
+
+
