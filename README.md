@@ -9,7 +9,7 @@ In this assignment, we will refactor and extend the app we started to implement 
 1. Create a fork of this repository (button in the right upper corner)
 2. Clone the project (get the link by clicking the green _Clone or download button_)
 3. Import the project to your Android Studio; it behaves almost the same as IntelliJ.
-4. **This assignment requires at least JDK10 or newer! Make sure that you have JDK10 or 11 installed on your machine and the environment variables `JAVA_HOME` and `JDK_HOME` set accordingly.** 
+4. **This assignment requires at least JDK11 or newer! Make sure that you have JDK11 installed on your machine and the environment variables `JAVA_HOME` and `JDK_HOME` set accordingly.** 
 
 ## Singleton Pattern
 
