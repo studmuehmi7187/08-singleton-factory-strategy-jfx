@@ -1,4 +1,4 @@
-_This is an assignment to the class [Programmieren 3](https://hsro-inf-prg3.github.io) at the [Technical University of Applied Sciences Rosenheim](https://www.th-rosenheim.de)._
+_This is an assignment to the class [Advanced Programming](https://hsro-inf-fpk.github.io) at the [University of Applied Sciences Rosenheim](http://www.th-rosenheim.de)._
 
 # Assignment 8: Singleton-, factory- and strategy pattern
 
@@ -8,15 +8,13 @@ In this assignment, we will refactor and extend the app we started to implement 
 
 1. Create a fork of this repository (button in the right upper corner)
 2. Clone the project (get the link by clicking the green _Clone or download button_)
-3. Import the project to your Android Studio; it behaves almost the same as IntelliJ.
-4. **This assignment requires at least JDK11 or newer! Make sure that you have JDK11 installed on your machine and the environment variables `JAVA_HOME` and `JDK_HOME` set accordingly.** 
+3. **This assignment requires at least JDK11 or newer! Make sure that you have JDK11 installed on your machine and the environment variables `JAVA_HOME` and `JDK_HOME` set accordingly.**
+4. In case you want to run it with JDK1.8 (Java 8), you can check out the `master-8` branch!  
 
 ## Singleton Pattern
 
 As already explained in the lecture a singleton is an object which is accessible in your whole application at any time.
 To avoid having to create a new instance of the API proxy again and again we want to implement a singleton that holds an instance of the `OpenMensaAPI` interface we implemented last time.
-
-_Side note: depending on who you ask, Singletons are a design flaw in themselves. That might be true or not but keep in mind that Singletons should be used carefully. (Especially when they are used in multi threading applications as they may lead to unpredictable behavior.)_
 
 The following UML shows **one possibility** how this may be accomplished:
 
@@ -35,7 +33,7 @@ _Remark: IntelliJ is capable to generate singletons for you. Check the "Kind" dr
 
 ## Strategy and Factory Pattern - Filters
 
-Until now we were only able to filter for vegetarian food.
+Until now, we were only able to filter for vegetarian food.
 This time we want to extend the filter capabilities of our app.
 The following wireframe shows the new layout of our app:
 
