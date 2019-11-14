@@ -74,7 +74,7 @@ public class MainController implements Initializable {
 		gson = new Gson();
 
 		/* initialize Retrofit instance */
-		var retrofit = new Retrofit.Builder()
+		Retrofit retrofit = new Retrofit.Builder()
 			.addConverterFactory(GsonConverterFactory.create(gson))
 			.baseUrl("http://openmensa.org/api/v2/")
 			.build();
@@ -101,14 +101,14 @@ public class MainController implements Initializable {
 	 * Handles fetching of meals from OpenMensa API
 	 */
 	private void doGetMeals() {
-		api.getMeals(openMensaDateFormat.format(new Date())).enqueue(new Callback<>() {
+		api.getMeals(openMensaDateFormat.format(new Date())).enqueue(new Callback<List<Meal>>() {
 			@Override
 			public void onResponse(Call<List<Meal>> call, Response<List<Meal>> response) {
 				logger.debug("Got response");
 				if (!response.isSuccessful() || response.body() == null) {
 					logger.error(String.format("Got response with not successfull code %d", response.code()));
 					Platform.runLater(() -> {
-						var alert = new Alert(Alert.AlertType.ERROR);
+						Alert alert = new Alert(Alert.AlertType.ERROR);
 						alert.setHeaderText("Unsuccessful HTTP call");
 						alert.setContentText("Failed to get meals from OpenMensaAPI");
 						alert.show();
@@ -123,7 +123,7 @@ public class MainController implements Initializable {
 			@Override
 			public void onFailure(Call<List<Meal>> call, Throwable t) {
 				logger.error("Failed to fetch meals");
-				var alert = new Alert(Alert.AlertType.ERROR);
+				Alert alert = new Alert(Alert.AlertType.ERROR);
 				alert.setHeaderText("Failed HTTP call");
 				alert.setContentText("Failed to submit HTTP call to fetch meals.");
 				alert.show();
