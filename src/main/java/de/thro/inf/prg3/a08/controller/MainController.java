@@ -5,6 +5,7 @@ import de.thro.inf.prg3.a08.api.OpenMensaAPI;
 import de.thro.inf.prg3.a08.filtering.MealsFilter;
 import de.thro.inf.prg3.a08.filtering.MealsFilterFactory;
 import de.thro.inf.prg3.a08.filtering.NoSoyStrategy;
+import de.thro.inf.prg3.a08.filtering.VegetarianStrategy;
 import de.thro.inf.prg3.a08.model.Meal;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -104,8 +105,8 @@ public class MainController implements Initializable {
 		filterChoiceBox.setOnAction(new EventHandler<ActionEvent>(){
 			@Override
 			public void handle(ActionEvent actionEvent) {
-				MealsFilter mf = new MealsFilterFactory(filterChoiceBox.getSelectionModel());
-				mealsListView.setItems(mf.filter(meals));
+				MealsFilter m2f = new MealsFilterFactory().getStrategy(filterChoiceBox.getSelectionModel().getSelectedItem());
+				mealsListView.setItems((ObservableList<Meal>) m2f.filter(meals));
 
 			}
 		});

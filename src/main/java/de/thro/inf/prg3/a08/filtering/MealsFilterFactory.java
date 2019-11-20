@@ -2,7 +2,7 @@ package de.thro.inf.prg3.a08.filtering;
 
 public class MealsFilterFactory {
 
-	MealsFilter getStrategy(String key){
+	public static MealsFilter getStrategy(String key){
 
 		switch(key){
 			case "All":
