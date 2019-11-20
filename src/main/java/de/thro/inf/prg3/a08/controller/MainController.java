@@ -2,10 +2,15 @@ package de.thro.inf.prg3.a08.controller;
 
 import com.google.gson.Gson;
 import de.thro.inf.prg3.a08.api.OpenMensaAPI;
+import de.thro.inf.prg3.a08.filtering.MealsFilter;
+import de.thro.inf.prg3.a08.filtering.MealsFilterFactory;
+import de.thro.inf.prg3.a08.filtering.NoSoyStrategy;
 import de.thro.inf.prg3.a08.model.Meal;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -95,6 +100,16 @@ public class MainController implements Initializable {
 		mealsListView.setItems(meals);
 		filterChoiceBox.setItems(FXCollections.observableList(Arrays.asList(gson.fromJson(new InputStreamReader(getClass().getResourceAsStream("/filters.json")), String[].class))));
 		doGetMeals();
+
+		filterChoiceBox.setOnAction(new EventHandler<ActionEvent>(){
+			@Override
+			public void handle(ActionEvent actionEvent) {
+				MealsFilter mf = new MealsFilterFactory(filterChoiceBox.getSelectionModel());
+				mealsListView.setItems(mf.filter(meals));
+
+			}
+		});
+
 	}
 
 	/**
